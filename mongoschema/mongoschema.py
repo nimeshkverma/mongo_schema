@@ -1,0 +1,104 @@
+from pymongo import MongoClient
+from collections import defaultdict
+from prettytable import PrettyTable
+
+class schema(object):
+
+	"Gets the schema of a MongoDB collection"
+	
+	DEFAULT_MONGO_URI = 'mongodb://localhost:27017/'
+	DEFAULT_PORT = 27017
+
+	def __init__(self, db_name, collection_name, where_dict={}, host=None, port=None, mongo_uri=DEFAULT_MONGO_URI):
+		"""
+			Initializes Mongo Credentials given by user
+
+			:param db_name: Name of the database
+			:type  db_name: string
+
+			:param collection_name: Name of the collection
+			:type  collection_name: string
+
+
+			:param where_dict: Filters  (specific fields/value ranges etc.)
+			:type  where_dict: dictionary
+
+			:param mongo_uri: Mongo Server and Port information
+			:type  mongo_uri: string
+
+
+			:param select_keys: Key, Value pairs to be fetched after join
+			:type  select_keys: list
+
+		"""
+
+		self.mongo_uri = mongo_uri
+		self.db_name = db_name
+		self.collection = collection_name
+		self.where_dict = where_dict
+		self.host = host
+		self.port = port
+
+
+	def get_mongo_cursor(self):
+		"""
+			Returns Mongo cursor using the class variables
+
+			:return: mongo collection for which cursor will be created
+			:rtype: mongo colection object
+		"""
+		try:
+			if self.host:
+				if self.port:
+					client = MongoClient(self.host, self.port)
+				else:
+					client = MongoClient(
+						self.host, MongoCollection.DEFAULT_PORT)
+			else:
+				client = MongoClient(self.mongo_uri)
+
+			db = client[self.db_name]
+			cursor = db[self.collection]
+
+			return cursor
+
+		except Exception as e:
+			msg = "Mongo Connection could not be established for Mongo Uri: {mongo_uri}, Database: {db_name}, Collection {col}, Error: {error}".format(
+				mongo_uri=self.mongo_uri, db_name=self.db_name, col=self.collection, error=str(e))
+			raise Exception(msg)
+
+	
+
+	def get_schema(self):
+		"""
+			Returns the schema related stats of a MongoDB collection
+		"""
+		cursor = self.get_mongo_cursor()
+		result_set = cursor.find(self.where_dict)
+		table = PrettyTable(['Key','Count','Percentage'])
+		dict_stat = defaultdict(lambda: 0)
+		dict_type = defaultdict(lambda: "")
+		num_docs = 0
+
+		for i in result_set:
+			keys = i.keys()
+			for k in keys:
+				dict_stat[k] += 1
+			num_docs += 1
+
+		print "Total number of docs:",num_docs
+		
+		for k,v in dict_stat.iteritems():
+			table.add_row([k,v,v*100/num_docs])
+
+		print table
+
+		
+
+
+
+
+
+
+
+
