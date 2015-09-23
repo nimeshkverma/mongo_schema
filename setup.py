@@ -9,7 +9,7 @@ setup(name='mongoschema',
       url='https://github.com/nimeshkverma/mongo_schema',
       download_url='',
       py_modules=['mongoschema'],
-      install_requires=['pymongo'],
+      install_requires=['pymongo','prettytable'],
       keywords=['mongo', 'schema'],
       classifiers=[],
       )
