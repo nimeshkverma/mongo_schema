@@ -9,7 +9,7 @@ class Schema(object):
 	DEFAULT_MONGO_URI = 'mongodb://localhost:27017/'
 	DEFAULT_PORT = 27017
 
-	def __init__(self, db_name, collection_name, where_dict={}, host=None, port=None, mongo_uri=DEFAULT_MONGO_URI):
+	def __init__(self, db_name, collection_name, where_dict={}, host=None, port=None, mongo_uri=DEFAULT_MONGO_URI, limit=-1):
 		"""
 			Initializes Mongo Credentials given by user
 
@@ -19,14 +19,20 @@ class Schema(object):
 			:param collection_name: Name of the collection
 			:type  collection_name: string
 
-			:param where_dict: Filters  (specific fields/value ranges etc.)
+			:param where_dict: Filters (specific fields/value ranges etc.)
 			:type  where_dict: dictionary
+
+			:param host: Host IP
+			:type  host: string
+
+			:param port: Port number
+			:type  port: int
 
 			:param mongo_uri: Mongo Server and Port information
 			:type  mongo_uri: string
 
-			:param select_keys: Key, Value pairs to be fetched after join
-			:type  select_keys: list
+			:param limit: Number of docs to be sampled
+			:type  limit: int
 
 		"""
 
@@ -36,6 +42,7 @@ class Schema(object):
 		self.where_dict = where_dict
 		self.host = host
 		self.port = port
+		self.limit = limit
 
 
 	def get_mongo_cursor(self):
@@ -72,9 +79,10 @@ class Schema(object):
 			Returns the schema related stats of a MongoDB collection
 		"""
 		cursor = self.get_mongo_cursor()
-		result_set = cursor.find(self.where_dict)
+		result_set = cursor.find(self.where_dict).limit(self.limit)
 		table = PrettyTable(['Key','Count','Percentage'])
 		stat_dict = defaultdict(lambda: 0)
+		type_dict = defaultdict(lambda: "")
 		num_docs = 0
 
 		for result in result_set:
@@ -82,12 +90,13 @@ class Schema(object):
 				stat_dict[key] += 1
 			num_docs += 1
 
-		print "Total number of docs:",num_docs
 		
 		for k,v in stat_dict.iteritems():
 			table.add_row([k,v,v*100/num_docs])
 
+		print "Total number of docs:",num_docs
 		print table
+
 
 		
 
