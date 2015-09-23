@@ -19,13 +19,11 @@ class Schema(object):
 			:param collection_name: Name of the collection
 			:type  collection_name: string
 
-
 			:param where_dict: Filters  (specific fields/value ranges etc.)
 			:type  where_dict: dictionary
 
 			:param mongo_uri: Mongo Server and Port information
 			:type  mongo_uri: string
-
 
 			:param select_keys: Key, Value pairs to be fetched after join
 			:type  select_keys: list
