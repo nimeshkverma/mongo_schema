@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from collections import defaultdict
 from prettytable import PrettyTable
 
-class schema(object):
+class Schema(object):
 
 	"Gets the schema of a MongoDB collection"
 	
@@ -76,19 +76,17 @@ class schema(object):
 		cursor = self.get_mongo_cursor()
 		result_set = cursor.find(self.where_dict)
 		table = PrettyTable(['Key','Count','Percentage'])
-		dict_stat = defaultdict(lambda: 0)
-		dict_type = defaultdict(lambda: "")
+		stat_dict = defaultdict(lambda: 0)
 		num_docs = 0
 
-		for i in result_set:
-			keys = i.keys()
-			for k in keys:
-				dict_stat[k] += 1
+		for result in result_set:
+			for key in result.keys:
+				stat_dict[key] += 1
 			num_docs += 1
 
 		print "Total number of docs:",num_docs
 		
-		for k,v in dict_stat.iteritems():
+		for k,v in stat_dict.iteritems():
 			table.add_row([k,v,v*100/num_docs])
 
 		print table
