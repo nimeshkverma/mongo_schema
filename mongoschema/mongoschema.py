@@ -9,7 +9,7 @@ class Schema(object):
 	DEFAULT_MONGO_URI = 'mongodb://localhost:27017/'
 	DEFAULT_PORT = 27017
 
-	def __init__(self, db_name, collection_name, where_dict={}, host=None, port=None, mongo_uri=DEFAULT_MONGO_URI, limit=-1):
+	def __init__(self, db_name, collection_name, where_dict={}, host=None, port=None, mongo_uri=DEFAULT_MONGO_URI, limit=0):
 		"""
 			Initializes Mongo Credentials given by user
 
