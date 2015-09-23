@@ -78,7 +78,7 @@ class Schema(object):
 		num_docs = 0
 
 		for result in result_set:
-			for key in result.keys:
+			for key in result.keys():
 				stat_dict[key] += 1
 			num_docs += 1
 
