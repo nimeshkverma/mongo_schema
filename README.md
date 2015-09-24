@@ -1,7 +1,7 @@
 # mongoschema
 **MongoDB schema information in Python**
 
-**mongoschema** is a library written in Python to provide concise statistical description of the schema of a collection in MongoDB
+**mongoschema** is a library written in Python to provide concise description of the schema of a collection in MongoDB
 
 
 
@@ -21,24 +21,27 @@ Navigate to `test/sample_data` in the `mongojoin` directory and type the followi
 This will create and populate the required collections with sample data for running the tests.
 
 
-The two collections 'supplier' and 'order' will be used to demonstrate how to use **mongoschema**.
-To check the contents of the collection, the following command can be used on the MongoDB shell :
+The two collections *supplier* and *order* will be used to demonstrate how to use **mongoschema**.
+To check the contents of the collection, the following command can be used in the MongoDB shell :
 
 	> use test
 	> db.supplier.find({})
 	> db.order.find({})
 
-## Using `mongoschema` to getthe schema information of a MongoDB coolections
+## Using `mongoschema` to get the schema information of a MongoDB collections
 ***
 Type the following in Python shell to import `mongoschema`- 
 
 	>>> from mongoschema import Schema
 
-To create `Schema` object for the collection to be analysed, type the following -
+To create a `Schema` object for the collection to be analysed, type the following -
 
 	>>> schema = Schema("test", "supplier")
 
-Additional parameters 
+where `test` is the DB name and `supplier` is the Collection name.
+
+
+Additional parameters -
 
 `host` : Mongo uri (String)
 `port` : Port Number (Integer)
