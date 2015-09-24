@@ -12,13 +12,14 @@ To install the package, type the following -
 	pip install mongoschema
 
 
-## Sample data - Populating MongoDb with sample data
+## Sample data - Populating MongoDB with sample data
 ***
 Navigate to `test/sample_data` in the `mongojoin` directory and type the following command -
 
 	> mongoimport --dbname test --collection supplier --file supplier.json
+	> mongoimport --dbname test --collection order --file order.json
 
-This will create and populate the required collections with sample data for running the tests.
+This will create and populate the required collections with sample data.
 
 
 The two collections *supplier* and *order* will be used to demonstrate how to use **mongoschema**.
@@ -42,7 +43,6 @@ where `test` is the DB name and `supplier` is the Collection name.
 
 
 Additional parameters -
-
 `host` : Mongo uri (String)
 `port` : Port Number (Integer)
 `limit`: Number of docs to be sampled
