@@ -93,7 +93,7 @@ class Schema(object):
 
             max_key_percent = round(
                 max_key_type_count * 100.0 / total_keys, 2) if total_keys else 0.0
-            occurrence_percent = round(total_keys * 100.0 / total_keys, 2)
+            occurrence_percent = round(total_keys * 100.0 / total_docs, 2) if total_docs else 0.0
 
             prettytable_row = [
                 key, total_keys, occurrence_percent, max_key_type, max_key_percent]
