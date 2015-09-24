@@ -33,7 +33,7 @@ To check the contents of the collection, the following command can be used in th
 ***
 Type the following in Python shell to import `mongoschema`- 
 
-	>>> from mongoschema import Schema
+	>>> from mongoschema.mongoschema import Schema
 
 To create a `Schema` object for the collection to be analysed, type the following -
 
