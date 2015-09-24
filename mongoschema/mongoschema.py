@@ -83,29 +83,30 @@ class Schema(object):
         pretty_table_headers = [
             'Key', 'Occurrence Count', 'Occurrence Percentage', 'Value Type', 'Value Type Percentage']
         result_table = PrettyTable(pretty_table_headers)
-        
+
         for key, key_types in key_type_count.iteritems():
+            total_keys = sum(key_types.values())
+            max_key_type_count = max(key_types.values())
 
-
-            max_key_type_count = sorted(key_types.values())[-2]
             max_key_type = [key_type for key_type, key_type_count in key_types.iteritems(
             ) if key_type_count == max_key_type_count][0]
 
-            max_key_percent = round(max_key_type_count * 100.0 / key_types['total'], 2) if key_types['total'] else 0.0
+            max_key_percent = round(
+                max_key_type_count * 100.0 / total_keys, 2) if total_keys else 0.0
+            occurrence_percent = round(total_keys * 100.0 / total_keys, 2)
 
-            occurrence_percent = round(key_types['total'] * 100.0 / total_docs, 2)
-
-            prettytable_row = [key, key_types['total'], occurrence_percent, max_key_type, max_key_percent]
+            prettytable_row = [
+                key, total_keys, occurrence_percent, max_key_type, max_key_percent]
             result_table.add_row(prettytable_row)
 
         return result_table
 
-    def get_schema(self):
+    def get_schema(self, return_dict=True):
         """
-                        Returns the schema related stats of a MongoDB collection
+            Returns the schema related stats of a MongoDB collection
 
-                        :return: total number of docs and PrettyTable
-                        :rtype: int and PrettyTable object
+            :return: Total number of docs sampled, Dictionary containing the stats 
+            :rtype: int, Dictionary object
 
         """
         total_docs = 0
@@ -120,20 +121,18 @@ class Schema(object):
             tuple: 0,
             None: 0,
             object: 0,
-            unicode:0,
+            unicode: 0,
             "other": 0,
-            "total": 0
         }
 
         cursor = self.get_mongo_cursor()
         mongo_collection_docs = cursor.find(
             self.where_dict).limit(self.limit)
 
-        key_type_count = defaultdict(lambda: key_type_default_count)
+        key_type_count = defaultdict(lambda: dict(key_type_default_count))
 
         for doc in mongo_collection_docs:
             for key, value in doc.iteritems():
-                key_type_count[key]["total"] += 1
                 if type(value) in key_type_count[key].keys():
                     key_type_count[key][type(value)] += 1
                 else:
@@ -141,14 +140,16 @@ class Schema(object):
             total_docs += 1
 
         result_table = self.get_pretty_table(key_type_count, total_docs)
-        return total_docs, result_table
+
+        if not return_dict:
+            return total_docs, result_table
+        return total_docs, key_type_count
 
     def print_schema(self):
         """
-                Prints the schema related stats of a MongoDB collection
+            Prints the schema related stats of a MongoDB collection
         """
-
-        total_docs, result_table = self.get_schema()
+        total_docs, result_table = self.get_schema(return_dict=False)
 
         print "Total number of docs : {total_docs}".format(total_docs=total_docs)
         print result_table
