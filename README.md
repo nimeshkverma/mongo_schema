@@ -67,4 +67,4 @@ Use the following command to pretty print the results -
 	|     _id     |        7         |         100.0         |      other       |         100.0         |
 	+-------------+------------------+-----------------------+------------------+-----------------------+
 
-More contents here - https://pypi.python.org/pypi/mongoschema/1.0.0
+More contents here - https://pypi.python.org/pypi/mongoschema/
